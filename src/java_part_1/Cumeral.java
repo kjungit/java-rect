@@ -31,7 +31,7 @@ package java_part_1;
 //                2   A    C
 
 
-public class cumeral {
+public class Cumeral {
     static void main() {
         int age = 25;
         System.out.println("10진수: " + age);
