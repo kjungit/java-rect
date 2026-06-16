@@ -1,19 +1,18 @@
 package managementinterface;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class Main {
     private static Scanner sc = new Scanner(System.in);
     public static void main(String[] args) {
-        int plan = selectPlan();
-        int capacity = plan * 10;
-
-        MemberManager manager = new MemberManager(capacity);
+        PricePlan pricePlan = selectPlan();
+        MemberManager manager = new MemberManager(pricePlan);
 
         while (true) {
             printMenu(manager);
             int menu = inputNumber("> ");
-
             switch (menu) {
                 case 1:
                     addMember(manager);
@@ -42,15 +41,22 @@ public class Main {
         }
     }
 
-    private static int selectPlan() {
+    private static PricePlan selectPlan() {
         while (true) {
             System.out.println("[요금제를 선택하세요]");
             System.out.println("[1]Lite : 10명 [2]Basic : 20명 [3]Premium : 30명");
             int plan = inputNumber("> ");
-            if (plan >= 1 && plan <= 3) {
-                return plan;
+
+            switch (plan) {
+                case 1:
+                    return PricePlan.LITE;
+                case 2:
+                    return PricePlan.BASIC;
+                case 3:
+                    return PricePlan.PREMIUM;
+                default:
+                    System.out.println("1~3번 중에서 선택해주세요.");
             }
-            System.out.println("1~3번 중에서 선택해주세요.");
         }
     }
 
