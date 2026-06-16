@@ -4,8 +4,8 @@ public class MemberManager {
     private Member[] members;
     private int memberCnt;
 
-    public MemberManager(int capacity) {
-        members = new Member[capacity];
+    public MemberManager(PricePlan pricePlan) {
+        members = new Member[pricePlan.getCapacity()];
         memberCnt = 0;
     }
 
