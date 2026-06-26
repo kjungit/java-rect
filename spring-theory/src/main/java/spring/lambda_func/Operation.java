@@ -1,4 +1,7 @@
 package spring.lambda_func;
 
-public class Operation {
+// Operation.java
+@FunctionalInterface
+interface Operation {
+    int apply(int a, int b);
 }

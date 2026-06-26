@@ -1,4 +1,6 @@
 package spring.lambda_func;
 
-public interface Predicate {
+@FunctionalInterface
+public interface Predicate<T> {
+    boolean test(T t);
 }

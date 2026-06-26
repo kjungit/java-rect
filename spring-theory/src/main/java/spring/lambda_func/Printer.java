@@ -1,4 +1,6 @@
 package spring.lambda_func;
 
-public class Printer {
+@FunctionalInterface
+interface Printer {
+    void print(String msg);
 }
