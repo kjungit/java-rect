@@ -1,4 +1,6 @@
 package spring.strategy;
 
-public interface ResultStatementStrategy {
+@FunctionalInterface
+interface ResultStatementStrategy<T> {
+    T run(Database db);
 }
