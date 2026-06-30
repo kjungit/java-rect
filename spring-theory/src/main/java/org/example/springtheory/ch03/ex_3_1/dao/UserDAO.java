@@ -7,6 +7,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
+// * 템플릿 메서드 패턴의 적용
+// 상속을 통해 기능을 확장해서 사요하는 부분이다.
+// 변하지 않는 부분은 슈퍼클래스에 두고 변하는 부분은 추상 메서드,로 정의해둬서
+// 서브클래스에서 오버라이드하여 새롭게 정의해 쓰도록 하는 것이다.
+
 public abstract class UserDAO {
 
     private SimpleConnectionMaker simpleConnectionMaker;
