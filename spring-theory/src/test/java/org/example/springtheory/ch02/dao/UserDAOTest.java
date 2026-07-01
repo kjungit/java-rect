@@ -11,6 +11,20 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+// * UserDAO 단위 테스트 (JUnit 5)
+// Start.java의 main() + System.out.println 방식을 JUnit 테스트로 옮긴 것이다.
+//  - 사람이 콘솔을 눈으로 확인하지 않아도, assert(단언)로 결과를 '코드가' 자동 검증한다.
+//  - DAO가 늘어나도 테스트 메서드만 추가하면 한 번에 자동 실행할 수 있다.
+
+// * @Autowired로 빈을 주입받으려면? -> 테스트를 '스프링 컨테이너 안에서' 실행해야 한다.
+//   @SpringJUnitConfig(DaoFactory.class) 가 그 역할을 한다. 이 한 줄은 사실 두 가지를 합친 것이다.
+//    1) @ExtendWith(SpringExtension.class) : JUnit5에 스프링 테스트 기능을 끼워 넣는다.
+//    2) @ContextConfiguration(classes = DaoFactory.class) : 어떤 설정으로 컨테이너를 띄울지 지정.
+//   -> 그래서 테스트 실행 시 스프링이 DaoFactory로 컨텍스트를 만들고,
+//      @Autowired가 붙은 필드에 맞는 타입의 빈(UserDAO)을 자동으로 꽂아준다(필드 주입).
+//   (애너테이션이 없으면 컨테이너가 없어 userDao가 null -> NullPointerException 발생)
+
 @SpringJUnitConfig(DaoFactory.class)
 class UserDAOTest {
 
@@ -27,7 +41,7 @@ class UserDAOTest {
         userDAO.deleteAll();
     }
 
-    private User newUser(String id, String name, String password) {
+    private User newUser( String id, String name, String password) {
         User user = new User();
         user.setId(id);
         user.setName(name);

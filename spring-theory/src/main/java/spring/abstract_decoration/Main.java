@@ -1,9 +1,8 @@
 package spring.abstract_decoration;
 
-import spring.abstract_decoration.decorater.TimingNotificationSender;
-import spring.abstract_decoration.service.EmailNotificationSender;
-import spring.abstract_decoration.decorater.LoggingNotificationSender;
-import spring.abstract_decoration.decorater.RetryNotificationSender;
+import spring.abstract_decoration.decorator.TimingNotificationSender;
+import spring.abstract_decoration.decorator.LoggingNotificationSender;
+import spring.abstract_decoration.decorator.RetryNotificationSender;
 
 public class Main {
     public static void main( String[] args ) {

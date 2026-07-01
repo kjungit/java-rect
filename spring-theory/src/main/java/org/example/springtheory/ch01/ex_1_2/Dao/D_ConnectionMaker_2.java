@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class D_ConnectionMaker_2 implements SimpleConnectionMaker_2{
+public class D_ConnectionMaker_2 implements SimpleConnectionMaker_2 {
     @Override
     public Connection makeNewConnection() throws ClassNotFoundException, SQLException {
         Class.forName("com.mysql.cj.jdbc.Driver");

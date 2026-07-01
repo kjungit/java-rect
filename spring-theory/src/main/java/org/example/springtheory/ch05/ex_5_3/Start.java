@@ -30,6 +30,7 @@ public class Start {
     static void main(String[] args) throws SQLException, ClassNotFoundException {
         AnnotationConfigApplicationContext context =
                 new AnnotationConfigApplicationContext(DaoFactory.class);
+
         UserService userService = context.getBean("userService", UserService.class);
 
         userService.upgradeLevels();

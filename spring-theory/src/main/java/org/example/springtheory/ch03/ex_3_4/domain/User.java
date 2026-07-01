@@ -1,4 +1,4 @@
-package org.example.springtheory.ch03.ex_3_3.domain;
+package org.example.springtheory.ch03.ex_3_4.domain;
 
 public class User {
 

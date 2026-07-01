@@ -1,4 +1,4 @@
-package spring.abstract_decoration.decorater;
+package spring.abstract_decoration.decorator;
 
 import spring.abstract_decoration.NotificationSender;
 

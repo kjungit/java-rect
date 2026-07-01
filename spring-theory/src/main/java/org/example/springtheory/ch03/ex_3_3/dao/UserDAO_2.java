@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+// * 익명 내부 클래스
 public class UserDAO_2 {
 
     private SimpleConnectionMaker simpleConnectionMaker;

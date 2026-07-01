@@ -24,21 +24,33 @@ import java.sql.SQLException;
 
 
 public class UserDAO {
+    private static UserDAO instance;
 
     private SimpleConnectionMaker simpleConnectionMaker;
 
-    public UserDAO(SimpleConnectionMaker simpleConnectionMaker) {
+    // 2) 생성자를 private 으로 막는다 -> 이제 외부에서 new UserDAO(...) 불가
+    private UserDAO( SimpleConnectionMaker simpleConnectionMaker ) {
         this.simpleConnectionMaker = simpleConnectionMaker;
     }
 
-    public void add(User user) throws ClassNotFoundException, SQLException {
+    // 3) 유일한 오브젝트를 돌려주는 통로
+    //    - synchronized: 여러 스레드가 동시에 들어와 오브젝트가 2개 만들어지는 것을 막는다.
+    public static synchronized UserDAO getInstance(SimpleConnectionMaker simpleConnectionMaker) {
+        if (instance == null) {
+            instance = new UserDAO(simpleConnectionMaker);
+        }
+
+        return instance;
+    }
+
+    public void add( User user ) throws ClassNotFoundException, SQLException {
 
         String query = "INSERT INTO users (id, name, password) VALUES (?, ?, ?)";
 
         try (
                 Connection conn = simpleConnectionMaker.makeNewConnection();
                 PreparedStatement pstmt = conn.prepareStatement(query);
-                ) {
+        ) {
             pstmt.setString(1, user.getId());
             pstmt.setString(2, user.getName());
             pstmt.setString(3, user.getPassword());
@@ -47,7 +59,7 @@ public class UserDAO {
 
     }
 
-    public User get(String id) throws ClassNotFoundException, SQLException {
+    public User get( String id ) throws ClassNotFoundException, SQLException {
         String query = "SELECT * FROM users WHERE id = ?";
 
         try (
@@ -60,9 +72,9 @@ public class UserDAO {
             resultSet.next();
 
             User user = new User();
-            user.setId( resultSet.getString("id") );
-            user.setName( resultSet.getString("name") );
-            user.setPassword( resultSet.getString("password") );
+            user.setId(resultSet.getString("id"));
+            user.setName(resultSet.getString("name"));
+            user.setPassword(resultSet.getString("password"));
 
             return user;
         }

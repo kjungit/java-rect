@@ -5,5 +5,4 @@ import java.sql.SQLException;
 
 public interface SimpleConnectionMaker {
     Connection makeNewConnection() throws ClassNotFoundException, SQLException;
-
 }
