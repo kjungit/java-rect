@@ -4,6 +4,7 @@ package org.example.springtheory.ch06.ex_6_4.service;
 import org.example.springtheory.ch06.ex_6_4.dao.Level;
 import org.example.springtheory.ch06.ex_6_4.dao.UserDAO;
 import org.example.springtheory.ch06.ex_6_4.domain.User;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // 업그레이드 담당
+    @Transactional
     @Override
     public void upgradeLevels() {
         try {

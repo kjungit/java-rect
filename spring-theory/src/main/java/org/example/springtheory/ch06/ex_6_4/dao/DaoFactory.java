@@ -18,7 +18,7 @@ import javax.sql.DataSource;
 //    스프링이 내부적으로 대신 등록해준다.
 //  => DaoFactory에서 Advice/Pointcut/Advisor/AutoProxyCreator 빈이 전부 사라졌다!
 
-@EnableTransactionManagement
+
 public class DaoFactory {
     @Bean
     public UserService userService() {
