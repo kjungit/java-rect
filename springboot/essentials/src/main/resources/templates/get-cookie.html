@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>쿠키 조회 결과</h1>
+
+<p th:if="${username != null}" th:text="'사용자 이름: ' + ${username}"></p>
+<p th:if="${username == null}">저장된 쿠키가 없습니다.</p>
+
+<a href="/set-cookie">쿠키 설정하기</a><br/>
+<a href="/delete-cookie">쿠키 삭제</a><br/>
+
+</body>
+</html>

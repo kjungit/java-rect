@@ -1,0 +1,65 @@
+package org.example.essentials.controller;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
+/* * 디스패처 서블릿(DispatcherServlet)
+    - 스프링 MVC로 들어오는 모든 HTTP 요청은 먼저 DispatcherServlet 하나를 거친다.
+    - 프론트 컨트롤러라고 부르기도 한다. (프론트 컨트롤러 패턴)
+    - 개발자가 만들지 않아도 스프링부트가 자동 구성으로 미리 등록해준다.
+    매커니즘
+    - 요청 하나가 들어와 응답이 나가기까지의 흐름은 다음과 같다.
+    - 1. 브라우저 요청이 필터를 지나 DispatcherServlet에 도착한다.
+    - 2. HandlerMapping에게 "이 URL(/login)을 처리할 컨트롤러가 누구지?" 라고 묻는다.
+    - 3. HandlerAdapter를 통해 실제 컨트롤러 메서드를 호출한다.
+        - 이 시점에 파라미터(@RequestPram, HttpSession)를 알맞게 만들어 넣어 준다.
+    - 4. 컨트롤러가 값을 반환하면 그 반환값을 어떻게 처리할지 갈린다.
+        - @Controller + 뷰 이름   -> ViewResolver 가 templates/이름.html 을 찾는다.
+        - @RestController/@ResponseBody -> HttpMessageConverter 가 데이터(문자열/JSON)로 변환한다.
+ */
+
+
+
+// * @Controller 와 @RestController의 차이
+// 둘 다 웹 요청을 받아 처리하는 컨트롤러지만, 메서드가 반환하는 String을 '어떻게 해석하느냐'가 다르다.
+// - @Controller : 반환하는 String을 '뷰(view)의 이름'으로 본다.
+// 그래서 SessionController, CookieController 처럼 HTML 페이지를 보여 줄 때 사용한다.
+// - @RestController : 반환하는 String(또는 객체)을 '데이터 그 자체'로 본다.
+// return "Hello World!"는 뷰를 찾지 않고 그 글자를 그대로 응답 본문에 보여 줄 때 사용한다.
+// 객체를 반환하면 JSON으로 변환해준다. 그래서 REST API를 만들 때 쓴다.
+// - 사실 @RestController 는 @Controller + @ResponseBody 를 합친 것이다.
+// @Controller 에서도 메서드에 @ResponseBody 를 붙이면 데이터를 그대로 반환할 수 있다.
+// 즉 @RestController 는 "이 클래스의 모든 메서드는 데이터를 반환한다"는 선언인 셈이다.
+
+//   - 정리 : 화면(HTML)을 보여 주려면 @Controller,
+//     데이터(JSON/문자열)를 내려 주려면 @RestController 를 쓴다.
+
+// * 필터 - Dispatcher Servlet 앞단에서 실행
+// 요청이 Dispatcher Servlet에 '도착하기도 전에' 먼저 거치는 관문이 필터다.
+// 서블리컨테이너(톰캣) 수준에서 동작하며, 스프링 MVC의 바깥에 위치한다.
+// 즉 필터는 '요청이 들어올 때'와 '응답이 나갈 때'를 모두 가로챌 수 있다.
+//   [하는 일]
+//   - 모든 요청에 공통으로 필요한 처리를 컨트롤러보다 먼저 해치운다.
+//     예: 인증/인가 검사, 요청 로깅, 문자 인코딩(UTF-8) 설정, CORS 처리 등.
+//   - 문지기라서, 통과시키지 않고 여기서 바로 응답을 돌려보내며 막을 수도 있다™   .
+//     (예: 로그인 안 된 요청을 컨트롤러까지 보내지 않고 필터에서 차단한다.)
+//   [만드는 법]
+//   - jakarta.servlet.Filter 를 구현하고 doFilter() 안에 로직을 작성한다.
+//   - doFilter() 안에서 chain.doFilter(request, response) 를 호출해야
+//     '다음 단계(다음 필터 또는 DispatcherServlet)'로 요청이 넘어간다.
+//     이 호출을 하지 않으면 요청은 여기서 멈춘다.
+
+@RestController
+public class FilterController {
+
+    @GetMapping("/hello")
+    public String hello(){
+        return "Hello World!";
+    }
+
+    @GetMapping("/api/data")
+    public String getData(){
+        return "data";
+    }
+}
