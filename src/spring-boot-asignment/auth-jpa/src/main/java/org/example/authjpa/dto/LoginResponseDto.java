@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class LoginResponseDto {
-    private boolean success;
+    private boolean succeeded;
     private String url;
     private String message;
 
