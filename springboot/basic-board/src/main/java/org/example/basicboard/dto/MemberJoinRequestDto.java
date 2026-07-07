@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MemberJoinRequestDto  {
+public class MemberJoinRequestDto {
     private String userId;
     private String password;
-    private String  userName;
+    private String userName;
 }
