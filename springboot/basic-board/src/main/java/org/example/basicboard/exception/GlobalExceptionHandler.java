@@ -32,9 +32,12 @@ public class GlobalExceptionHandler {
     // - 단순히 DTO만 반환하면 상태 코드가 항상 200(OK)으로 나가버린다.
     // 에러 상황에서는 상태 코드를 4XX/5XX등으로 바꿔야 하므로 ResponseEntity로 감싼다.
     @ExceptionHandler(DuplicateUserIdException.class)
-    public ResponseEntity<ErrorResponseDto> duplicateUserIdException(DuplicateUserIdException e) {
-        return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body(new ErrorResponseDto(HttpStatus.CONFLICT.value(), e.getMessage()));
+    public ResponseEntity<ErrorResponseDto> duplicateUserIdException( DuplicateUserIdException e ) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponseDto(HttpStatus.CONFLICT.value(), e.getMessage()));
+    }
+
+    @ExceptionHandler(BoardNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> boardNotFoundException( BoardNotFoundException e ) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(HttpStatus.NOT_FOUND.value(), e.getMessage()));
     }
 }

@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @Table(name = "board")
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Board {
@@ -32,4 +33,9 @@ public class Board {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime created;
 
+    public void update( String title, String content, String filePath ) {
+        this.title = title;
+        this.content = content;
+        this.filePath = filePath;
+    }
 }
