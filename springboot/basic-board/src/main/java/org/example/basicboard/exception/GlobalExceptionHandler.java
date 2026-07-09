@@ -40,4 +40,16 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> boardNotFoundException( BoardNotFoundException e ) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(HttpStatus.NOT_FOUND.value(), e.getMessage()));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> exception( Exception e ) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        new ErrorResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage()
+                        )
+                );
+
+    }
 }
+
