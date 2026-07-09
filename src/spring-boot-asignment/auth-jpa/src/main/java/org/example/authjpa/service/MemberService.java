@@ -24,7 +24,7 @@ public class MemberService {
     @Transactional
     public void join( MemberJoinRequestDto dto ) {
         if (memberRepository.existsByUserId(dto.getUserId())) {
-            throw new DuplicateUserIdException("이미 존재하는 아이디가 있음");
+            throw new DuplicateUserIdException("[회원가입] 이미 존재하는 아이디입니다.");
         }
         memberRepository.save(memberMapper.toEntity(dto));
     }
