@@ -8,6 +8,8 @@ public class FeignApiApplication {
 
     public static void main( String[] args ) {
         SpringApplication.run(FeignApiApplication.class, args);
+
+        
     }
 
 }
