@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.example.basicboard.domian.entity.Board;
-import org.example.basicboard.domian.repository.BoardRepository;
 import org.example.basicboard.dto.*;
+import org.example.basicboard.mapper.BoardMapper;
 import org.example.basicboard.service.BoardService;
 import org.example.basicboard.service.FileService;
 import org.springframework.core.io.Resource;
@@ -44,7 +44,7 @@ public class BoardApiController {
 
     private final BoardService boardService;
     private final FileService fileService;
-    private final BoardRepository boardRepository;
+    private final BoardMapper boardMapper;
 
     @Operation(
             summary = "게시글 목록 조회",
@@ -115,7 +115,10 @@ public class BoardApiController {
             }
     )
     @GetMapping("/{id}")
-    public BoardDetailResponseDto getBoardDetail( @PathVariable long id ) {
+    public BoardDetailResponseDto getBoardDetail(
+            @Parameter( description = "조회할 게시글 id", example = "1" )
+            @PathVariable long id
+                                                ) {
         Board boardDetail = boardService.getBoardDetail(id);
         return BoardDetailResponseDto.builder()
                 .title(boardDetail.getTitle())
@@ -221,4 +224,21 @@ public class BoardApiController {
         return boardService.searchBoards(dto, pageable);
     }
 
+
+    @Operation(summary = "게시글 상세 + 댓글",
+               description = "게시글 한 건과 그에 달린 댓글 목록을 fetch join 으로 한 번에 조회한다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+            @ApiResponse(responseCode = "404", description = "해당 id 의 게시글이 없음",
+                         content = @Content(schema = @Schema(implementation = ErrorResponseDto.class)))
+    })
+    @GetMapping("/{id}/with-comments")
+    public BoardWithCommentsResponseDto getBoardWithComments(
+            @Parameter(description = "조회할 게시글 id", example = "1")
+            @PathVariable long id
+                                    ) {
+        Board board = boardService.getBoardWithComments(id);
+        return boardMapper.toBoardWithCommentsResponseDto(board);
+
+    }
 }
