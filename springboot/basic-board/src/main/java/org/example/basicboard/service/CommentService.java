@@ -1,6 +1,7 @@
 package org.example.basicboard.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.basicboard.domian.entity.Board;
 import org.example.basicboard.domian.entity.Comment;
 import org.example.basicboard.domian.repository.BoardRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -34,5 +36,6 @@ public class CommentService {
                 .build();
 
         commentRepository.save(comment);
+        log.info("댓글 등록 : commentId = {}, boardId = {}, userId = {}", comment.getId(), boardId, dto.getUserId());
     }
 }

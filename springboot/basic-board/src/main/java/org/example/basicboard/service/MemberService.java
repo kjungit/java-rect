@@ -1,6 +1,7 @@
 package org.example.basicboard.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.basicboard.domian.entity.Member;
 import org.example.basicboard.domian.repository.MemberRepository;
 import org.example.basicboard.dto.LoginRequestDto;
@@ -18,9 +19,10 @@ import java.util.Optional;
 // "이 트랜잭션은 데이터를 안 바꾼다."라고 JPA한테 알려준다. 이 트랜잭션에서 조회만 하겠다는 힌트 -> 최적화
 // 하이버네이트가 변경감지를 위한 스냅샷을 안 만들어 메모리/성능에 유리
 // Insert/Update/Delete가 필요한 메서드는 @Transactional을 다시 붙인다.
+
+@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-
 public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberMapper memberMapper;
@@ -81,7 +83,16 @@ public class MemberService {
         //
         //   => 위 if 분기(널 체크 + 비밀번호 비교)를 .filter(람다) 한 줄로 압축한 것이 아래 코드다
 
-        return memberRepository.findByUserId(dto.getUsername())
-                .filter( member -> member.getPassword().equals(dto.getPassword()));
+        Optional<Member> result = memberRepository.findByUserId(dto.getUsername())
+                .filter(member -> member.getPassword().equals(dto.getPassword()));
+
+
+        if ( result.isEmpty() ) {
+            log.warn("로그인 실패 : username={}", dto.getUsername());
+        } else {
+            log.info("로그인 성공 : username={}", dto.getUsername());
+        }
+
+        return result;
     }
 }
