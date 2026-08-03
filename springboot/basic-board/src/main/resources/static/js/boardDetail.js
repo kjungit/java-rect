@@ -1,7 +1,7 @@
-
 $(document).ready(() => {
     checkSession();
     loadBoardDetail();
+    setupAjax();
 });
 
 let editArticle = () => {
@@ -17,7 +17,7 @@ let deleteArticle = () => {
     $.ajax({
         type: 'DELETE',
         url: '/api/boards/' + resourceId, // 실제 서버 API URL 및 삭제할 리소스 ID
-        data: JSON.stringify({ filePath: filePath }), // filePath를 JSON으로 서버에 전송
+        data: JSON.stringify({filePath: filePath}), // filePath를 JSON으로 서버에 전송
         contentType: 'application/json', // JSON 형식으로 전송
         success: (response) => {
             alert('리소스가 성공적으로 삭제되었습니다.');
@@ -30,14 +30,14 @@ let deleteArticle = () => {
     });
 }
 
-let checkSession = () => {
-    let hUserId = $('#hiddenUserId').val();
-
-    if (hUserId == null || hUserId === '')
-        window.location.href = "/members/login";
-}
 
 let loadBoardDetail = () => {
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) {
+        window.location.href = "/member/login";
+        return;
+    }
 
     let hId = $('#hiddenId').val();
     let hUserId = $('#hiddenUserId').val();
@@ -49,6 +49,10 @@ let loadBoardDetail = () => {
         //   - 게시글 필드(title/content/userId/created/filePath)는 이름이 같아 기존 코드가 그대로 동작하고,
         //     응답에 comments 배열이 추가로 담겨 온다
         url: '/api/boards/' + hId + '/with-comments',
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
+
         success: (response) => {
             $('#title').text(response.title);
             $('#content').text(response.content);
@@ -129,6 +133,14 @@ let submitComment = () => {
     let hUserId = $('#hiddenUserId').val();
     let content = $('#commentContent').val();
 
+
+    const token = localStorage.getItem('accessToken');
+
+    if (!token) {
+        window.location.href = '/members/login';
+        return;
+    }
+
     // 빈 댓글 방지 - trim 으로 공백만 친 경우도 걸러낸다
     if (content == null || content.trim() === '') {
         alert('댓글 내용을 입력해주세요.');
@@ -138,8 +150,11 @@ let submitComment = () => {
     $.ajax({
         type: 'POST',
         url: '/api/boards/' + hId + '/comments',
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
         contentType: 'application/json',                              // JSON 본문 (@RequestBody 로 받는다)
-        data: JSON.stringify({ userId: hUserId, content: content }),  // CommentWriteRequestDto 필드와 키가 같아야 한다
+        data: JSON.stringify({userId: hUserId, content: content}),  // CommentWriteRequestDto 필드와 키가 같아야 한다
         success: () => {
             $('#commentContent').val('');   // 입력칸 비우기
             loadBoardDetail();              // 방금 단 댓글이 보이도록 다시 조회

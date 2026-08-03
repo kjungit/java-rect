@@ -63,10 +63,3 @@ let updateFileList = () => {
         });
     }
 }
-
-let checkSession = () => {
-    let hUserId = $('#hiddenUserId').val();
-
-    if (hUserId == null || hUserId === '')
-        window.location.href = "/members/login";
-}

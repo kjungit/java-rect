@@ -12,14 +12,6 @@ $(document).ready(() => {
     });
 });
 
-// 로그인(세션) 확인 - 로그인 정보가 없으면 로그인 페이지로 보낸다
-let checkSession = () => {
-    let hUserId = $('#hiddenUserId').val();
-
-    if (hUserId == null || hUserId === '')
-        window.location.href = "/members/login";
-}
-
 // 통계 데이터를 로드하는 함수 - minCount 는 서버 쿼리의 having 조건이 된다
 let loadStats = () => {
     // 입력값이 비었거나 1 미만이면 1로 보정한다 (음수/0 을 보내는 실수 방지)
@@ -28,10 +20,14 @@ let loadStats = () => {
         minCount = 1;
         $('#minCount').val(1);
     }
+    const token = localStorage.getItem('accessToken');
 
     $.ajax({
         type: 'GET',
         url: '/api/boards/stats/authors',
+        headers: {
+            Authorization: `Bearer ${token}`
+        },
         data: {
             minCount: minCount
         },

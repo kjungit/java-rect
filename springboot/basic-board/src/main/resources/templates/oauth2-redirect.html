@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>OAuth2 Redirect</title>
+</head>
+<body>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get('accessToken');
+    const refreshToken = urlParams.get('refreshToken');
+
+    if (accessToken && refreshToken) {
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+
+        alert('카카오 로그인에 성공했습니다.');
+        window.location.href = '/';
+    } else {
+        alert('로그인에 실패했습니다.');
+        window.location.href = '/members/login';
+    }
+</script>
+</body>
+</html>
