@@ -2,16 +2,15 @@ package org.example.basicboard.domian.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.basicboard.config.oauth2.AuthProvider;
 
 import static lombok.AccessLevel.PROTECTED;
 
-// 회원 엔티티 - member 테이블과 매핑
 @Entity
 @Table(name = "member")
 @Getter
 @Builder
 @AllArgsConstructor
-// JPA는 기본 생성자가 필요하지만 외부에서 무분별한 생성을 막는다.
 @NoArgsConstructor(access = PROTECTED)
 public class Member {
     @Id
@@ -20,9 +19,31 @@ public class Member {
 
     @Column(nullable = false, length = 50)
     private String userId;
-    @Column(nullable = false, length = 50)
+
+    @Column()
     private String password;
+
     @Column(name = "user_name", nullable = false, length = 20)
     private String username;
 
+    @Column(length = 50)
+    private String email;
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Role role = Role.ROLE_USER;
+
+
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    @Column(length = 20)
+    private AuthProvider provider = AuthProvider.LOCAL;
+
+    @Column(length = 100)
+    private String providerId;
+
+    public void updateSocialInfo(AuthProvider provider, String providerId) {
+        this.provider = provider;
+        this.providerId = providerId;
+    }
 }

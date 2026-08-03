@@ -9,6 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class LoginRequestDto {
+    private String userId;
+
     @Schema(description = "로그인 아이디", example = "user01")
     private String username;
 

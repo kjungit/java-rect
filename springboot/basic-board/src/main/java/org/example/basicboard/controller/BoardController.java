@@ -10,14 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class BoardController {
     @GetMapping("/")
-    public String boardList( HttpSession session, Model model ) {
-        setSession(session, model);
+    public String boardList(  ) {
         return "board-list";
     }
 
     @GetMapping("/write")
-    public String write( HttpSession session, Model model ) {
-        setSession(session, model);
+    public String write(  ) {
         return "board-write";
     }
 
