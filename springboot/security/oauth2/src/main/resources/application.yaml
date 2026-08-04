@@ -1,3 +1,41 @@
 spring:
   application:
     name: oauth2
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/java_basic?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 20202020
+
+
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-secret: ${KAKAO_CLIENT_SECRET}
+            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            client-name: kakao
+            scope:
+              - profile_nickname
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize # 인가 페이지
+            token-uri: https://kauth.kakao.com/oauth/token # 코드 -> 토큰 교환
+            user-info-uri: https://kapi.kakao.com/v2/user/me # 사용자 정보 조회
+            user-name-attribute: id
+
+jwt:
+  issuer: test@naver.com
+  secret_key: Xq7JBp2ZwaGji9RkOolJrGeHdZhgPmxbtoSZL9UigVgbl7R3c8T087jEglGdzD/mGYW7bb99vym7VS29EHpVhg==
+  access-token-validity: 2h
+  refresh-token-validity: 7d
+
+
+
+
