@@ -36,4 +36,4 @@ public class KakaoOAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
-}
+}dd
