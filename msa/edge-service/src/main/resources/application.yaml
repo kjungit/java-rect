@@ -3,3 +3,21 @@ server:
 spring:
   application:
     name: edge-service
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: auth
+              uri: http://localhost:8082
+              predicates:
+                - Path=/api/auth/**,/api/users/**,/api/tokens/**
+            - id: oauth2-login
+              uri: http://localhost:8082
+              predicates:
+                - Path=/oauth2/**,/login/oauth2/**
+            - id: board
+              uri: http://localhost:8081
+              predicates:
+                - Path=/api/**
+          trusted-proxies: "127\\.0\\.0\\.1|0:0:0:0:0:0:0:1|::1"
