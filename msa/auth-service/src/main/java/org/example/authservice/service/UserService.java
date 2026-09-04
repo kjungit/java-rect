@@ -8,6 +8,7 @@ import org.example.authservice.domian.repository.UserRepository;
 import org.example.authservice.dto.SignInRequestDto;
 import org.example.authservice.dto.SignInResponseDto;
 import org.example.authservice.dto.SignUpRequestDto;
+import org.example.authservice.dto.UserNameResponseDto;
 import org.example.authservice.exception.DuplicateUserIdException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -61,4 +64,13 @@ public class UserService {
                 .build();
     }
 
+
+    public List<UserNameResponseDto> getUserNames( List<String> userIds ) {
+        return userRepository.findByUserIdIn(userIds).stream()
+                .map( user -> UserNameResponseDto.builder()
+                        .userId(user.getUserId())
+                        .userName(user.getName())
+                        .build())
+                .toList();
+    }
 }

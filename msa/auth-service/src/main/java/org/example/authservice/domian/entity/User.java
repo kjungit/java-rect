@@ -36,12 +36,13 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     @Builder.Default
-    private AuthProvider authProvider = AuthProvider.LOCAL;
+    private AuthProvider provider = AuthProvider.LOCAL;
 
     @Column(length = 100)
     private String providerId;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
