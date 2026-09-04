@@ -1,18 +1,18 @@
 package org.example.webservice.client;
 
+
 // 헤더를 파라미터로 받는 이유
 // Feign은 서블릿 요청과 무관한 새 HTTP 요청을 만들기 때문에,
 // 브라우저 web-service에 보낸 Authorization/Cookie 헤더가 자동으로 따라가지 않는다.
 // 컨트롤러가 받은 값을 명시적으로 넘겨줘야 auth-service까지 전달된다.
 
-import org.example.webservice.dto.BoardPageResponseDto;
-import org.example.webservice.dto.BoardSearchRequestDto;
+import org.example.webservice.dto.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.http.HttpHeaders;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @FeignClient(value = "board-service", url = "${edge-service.url:http://localhost:8000}")
 public interface BoardClient {
@@ -27,4 +27,48 @@ public interface BoardClient {
             @RequestParam("size") int size
                                      );
 
+    @GetMapping("/api/boards/{id}/with-comments")
+    BoardWithCommentsResponseDto getBoardWithComments(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @PathVariable("id") long id
+                                                     );
+
+    @PostMapping("/api/boards/{boardId}/comments")
+    void addComment(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @PathVariable long boardId,
+            @RequestBody CommentWriteRequestDto requestDto
+                   );
+
+    @PostMapping(value = "/api/boards", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    void saveBoard(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @RequestPart("title") String title,
+            @RequestPart("content") String content,
+            @RequestPart("userId") String userId,
+            @RequestPart(value = "file", required = false) MultipartFile file
+                  );
+
+    @GetMapping("/api/boards/{id}")
+    BoardDetailResponseDto getBoardDetail(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @PathVariable long id
+                                         );
+
+    @PutMapping(value = "/api/boards/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    void updateBoard(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @PathVariable long id,
+            @RequestPart("title") String title,
+            @RequestPart("content") String content,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            @RequestPart("fileFlag") String fileFlag
+                    );
+
+    @DeleteMapping("/api/boards/{id}")
+    void deleteBoard(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @PathVariable long id,
+            @RequestBody BoardDeleteRequestDto dto
+                    );
 }

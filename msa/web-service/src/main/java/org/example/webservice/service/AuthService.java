@@ -2,10 +2,7 @@ package org.example.webservice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.webservice.client.AuthClient;
-import org.example.webservice.dto.SignInRequestDto;
-import org.example.webservice.dto.SignInResponseDto;
-import org.example.webservice.dto.SignUpRequestDto;
-import org.example.webservice.dto.SignUpResponseDto;
+import org.example.webservice.dto.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,5 +18,9 @@ public class AuthService {
 
     public ResponseEntity<SignInResponseDto> signIn( SignInRequestDto signInRequestDto ) {
         return authClient.login(signInRequestDto);
+    }
+
+    public UserInfoResponseDto getUserInfo(String authorization) {
+        return  authClient.getUserInfo(authorization);
     }
 }
