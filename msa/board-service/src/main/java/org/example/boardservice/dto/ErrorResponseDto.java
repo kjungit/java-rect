@@ -1,6 +1,5 @@
 package org.example.boardservice.dto;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

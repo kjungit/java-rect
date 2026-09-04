@@ -1,6 +1,5 @@
 package org.example.boardservice.domain.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
