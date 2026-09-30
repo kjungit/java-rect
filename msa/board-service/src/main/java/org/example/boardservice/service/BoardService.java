@@ -6,10 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.boardservice.client.AuthClient;
 import org.example.boardservice.domain.entity.Board;
 import org.example.boardservice.domain.repository.BoardRepository;
-import org.example.boardservice.dto.BoardListItemResponseDto;
-import org.example.boardservice.dto.BoardSearchRequestDto;
-import org.example.boardservice.dto.BoardUpdateRequestDto;
-import org.example.boardservice.dto.UserNameResponseDto;
+import org.example.boardservice.domain.repository.CommentRepository;
+import org.example.boardservice.dto.*;
 import org.example.boardservice.exception.BoardNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,13 +25,14 @@ import java.util.List;
 public class BoardService {
 
     private final BoardRepository boardRepository;
+    private final CommentRepository commentRepository;
     private final AuthClient authClient;
     private final FileService fileService;
 
     // repository는 userId까지만 채워서 돌려준다.
     // 페이지에 등장한 userId를 "모아서 한 번" auth에 요청(벌크)
     // 받은 DTO목록에서 이름을 찾아 채워 완성한다.
-    public Page<BoardListItemResponseDto> searchBoards( BoardSearchRequestDto dto, Pageable pageable ) {
+    public Page<BoardListItemResponseDto> searchBoards(BoardSearchRequestDto dto, Pageable pageable) {
 
         // searchBoards 게시글들 가져오기
         Page<BoardListItemResponseDto> page = boardRepository.searchBoards(dto, pageable);
@@ -53,7 +52,7 @@ public class BoardService {
         ));
     }
 
-    public Board getBoardWithComments( Long boardId ) {
+    public Board getBoardWithComments(Long boardId) {
         return boardRepository.findWithComments(boardId)
                 .orElseThrow(
                         () -> new BoardNotFoundException("게시글을 찾을 수 없습니다. Id = " + boardId)
@@ -87,7 +86,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void saveBoard(String userId, String title, String content, MultipartFile file ) {
+    public void saveBoard(String userId, String title, String content, MultipartFile file) {
 
         String filePath = fileService.storeFile(file);
 
@@ -103,7 +102,6 @@ public class BoardService {
 
     }
 
-
     public Board getBoardDetail(long id) {
         return boardRepository.findById(id)
                 .orElseThrow(
@@ -111,8 +109,8 @@ public class BoardService {
                             );
     }
 
-
-    public void updateBoard(long id, BoardUpdateRequestDto dto ) {
+    @Transactional
+    public void updateBoard(long id, BoardUpdateRequestDto dto) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(
                         () -> new BoardNotFoundException("[BOARD] 수정할 게시글을 찾을 수 없습니다. id = " + id)
@@ -125,5 +123,51 @@ public class BoardService {
         }
 
         board.update(dto.getTitle(), dto.getContent(), filePath);
+    }
+
+    public void deleteBoard(long id, BoardDeleteRequestDto dto) {
+
+        if ( !boardRepository.existsById(id) ) {
+            throw new BoardNotFoundException("[BOARD] 삭제할 게시글을 찾을 수 없습니다. id = " + id);
+        }
+
+        // comment
+        commentRepository.deleteByBoardId(id);
+        // board
+        boardRepository.deleteById(id);
+        // file
+        fileService.deleteFile(dto.getFilePath());
+
+    }
+
+    public List<BoardAuthorStatsResponseDto> getAuthorStats(long minCount) {
+
+        List<BoardAuthorStatsResponseDto> stats = boardRepository.countBoardsByAuthor(minCount);
+
+        List<UserNameResponseDto> userNames = fetchNames(
+                stats.stream().map(BoardAuthorStatsResponseDto::getUserId).distinct().toList()
+                                                        );
+
+        return stats.stream()
+                .map( item -> new BoardAuthorStatsResponseDto(
+                        item.getUserId(),
+                        userNameOf(userNames, item.getUserId()),
+                        item.getBoardCount()
+                ))
+                .toList();
+    }
+
+    @Transactional
+    public void deleteUserContents(String userId) {
+        // 내 글에 달린 남의 댓글
+        long commentsOnBoards = commentRepository.deleteByBoardUserId(userId);
+
+        // 남의 글에 단 내 댓글
+        long myComments = commentRepository.deleteByUserId(userId);
+
+        // 내 게시글
+        long myBoards = boardRepository.deleteByUserId(userId);
+
+        log.info("[탈퇴 처리] userId : {}, 글 {}건, 댓글 {}건 삭제", userId, myBoards, (commentsOnBoards + myComments));
     }
 }
