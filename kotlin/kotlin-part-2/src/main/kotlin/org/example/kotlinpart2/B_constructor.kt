@@ -129,7 +129,7 @@ fun b_exam3() {
 }
 
 fun main() {
-    b_exam1()     // 주 생성자
+//    b_exam1()     // 주 생성자
     b_exam2()     // init 블록과 기본값
-    b_exam3()     // 부 생성자
+//    b_exam3()     // 부 생성자
 }

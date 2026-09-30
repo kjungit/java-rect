@@ -34,9 +34,9 @@ class Member {
     var age: Int = 0
 
     // 자바에서 isAdult() 메서드로 만들던 것이 코틀린에서는 프로퍼티가 된다.
+
     val isAdult: Boolean
         get() = age >= 19 // 저장 공간이 없고 getter만 있다.
-
 
 }
 

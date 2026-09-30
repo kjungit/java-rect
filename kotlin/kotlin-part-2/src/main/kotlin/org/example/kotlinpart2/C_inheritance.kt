@@ -51,6 +51,23 @@ open class Animal(val name: String) {
     }
 }
 
+open class Animal2(val name: String) {
+    open fun sound() {
+        println("$name ...")
+    }
+
+    fun sleep() {
+        println("$name sleep")
+    }
+
+    open val legs: Int = 4
+
+    override fun toString(): String {
+        return "Animal2(name='$name')"
+    }
+}
+
+
 class Dog(name: String) : Animal(name) {
     override fun sound() {
         println("$name : 멍멍~")
