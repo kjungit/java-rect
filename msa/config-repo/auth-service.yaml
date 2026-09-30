@@ -5,5 +5,5 @@ spring:
       client:
         registration:
           kakao:
-            client-id: ${KAKAO_CLIENT_ID}
-            client-secret: ${KAKAO_CLIENT_SECRET}
+            client-id: 639245ff2c1385d59fb018f041ccb78e
+            client-secret: iFBj3y8cF5uoVzPC4A3Ju9BHjxcDZcpv
