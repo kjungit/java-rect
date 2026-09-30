@@ -3,6 +3,9 @@ package org.example.authservice.config;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.authservice.config.filter.TokenAuthenticationFilter;
+import org.example.authservice.config.oauth2.OAuth2FailureHandler;
+import org.example.authservice.config.oauth2.OAuth2SuccessHandler;
+import org.example.authservice.service.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +32,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2SuccessHandler oAuth2SuccessHandler;
+    private final OAuth2FailureHandler oAuth2FailureHandler;
+
     @Value("${web-service.url}")
     private String webServiceUrl;
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
@@ -53,6 +60,15 @@ public class SecurityConfig {
                                                                ).permitAll()
                                                .anyRequest().authenticated()
                                       )
+                .oauth2Login(
+                        oauth2 -> oauth2
+                                .userInfoEndpoint(
+                                        userInfo -> userInfo
+                                                .userService(customOAuth2UserService)
+                                                 )
+                                .successHandler(oAuth2SuccessHandler)
+                                .failureHandler(oAuth2FailureHandler)
+                            )
                 .addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(exception ->  exception
                                            .accessDeniedHandler(accessDeniedHandler())
@@ -61,6 +77,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {

@@ -25,28 +25,34 @@ public record KakaoUserInfo(
 
     @Override
     public String email() {
-        Map<String, Object> kakaoAccount = kakaoAccount();
-        return kakaoAccount == null ? null : String.valueOf( kakaoAccount.get("email") );
+        return asString(kakaoAccount().get("email"));
     }
 
     @Override
     public String name() {
-        Map<String, Object> nickname = profile();
-        return nickname == null ? null : String.valueOf( nickname.get("name") );
+        return asString(profile().get("nickname"));
     }
 
     @Override
     public String imageUrl() {
-        Map<String, Object> nickname = profile();
-        return nickname == null ? null : String.valueOf( nickname.get("profile_image_url") );
+        return asString(profile().get("profile_image_url"));
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, Object> kakaoAccount() {
-        return (Map<String, Object>) attributes.get("kakao account");
+        Object account = attributes.get("kakao_account");
+        return account instanceof Map ? (Map<String, Object>) account : Map.of();
     }
 
+    @SuppressWarnings("unchecked")
     private Map<String, Object> profile() {
-        return (Map<String, Object>) kakaoAccount().get("profile");
+        Object profile = kakaoAccount().get("profile");
+        return profile instanceof Map ? (Map<String, Object>) profile : Map.of();
+    }
+
+    // String.valueOf(null)은 "null" 문자열이 되므로 직접 처리
+    private static String asString(Object value) {
+        return value == null ? null : String.valueOf(value);
     }
 
 }

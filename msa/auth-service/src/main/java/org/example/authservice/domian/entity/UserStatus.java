@@ -2,6 +2,6 @@ package org.example.authservice.domian.entity;
 
 public enum UserStatus {
     ACTIVE, // 정상
-    WITHDRAWING, // 탈퇴 중
-    WITHDRAW, // 탈퇴 확정
+    WITHDRAWING, // 탈퇴 진행중
+    WITHDRAWN, // 탈퇴 확정
 }
