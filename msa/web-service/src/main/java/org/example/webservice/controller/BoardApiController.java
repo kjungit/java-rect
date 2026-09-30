@@ -1,14 +1,14 @@
 package org.example.webservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.webservice.dto.BoardPageResponseDto;
-import org.example.webservice.dto.BoardSearchRequestDto;
-import org.example.webservice.dto.BoardWithCommentsResponseDto;
-import org.example.webservice.dto.BoardWriteRequestDto;
+import org.example.webservice.dto.*;
 import org.example.webservice.service.BoardService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -43,5 +43,48 @@ public class BoardApiController {
             @ModelAttribute BoardWriteRequestDto dto
                          ) {
         boardService.saveBoard(authorization, dto);
+    }
+
+
+    @GetMapping("/{id}")
+    public BoardDetailResponseDto getBoardDetail(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization,
+            @PathVariable long id
+                                                ) {
+        return boardService.getBoardDetail(authorization, id);
+    }
+
+    @PutMapping("/{id}")
+    public void updateBoard(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization,
+            @PathVariable long id,
+            @ModelAttribute BoardUpdateRequestDto dto
+                           ) {
+        boardService.updateBoard(authorization, id, dto);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteBoard(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization,
+            @PathVariable long id,
+            @RequestBody BoardDeleteRequestDto dto
+                           ) {
+        boardService.deleteBoard(authorization, id, dto);
+    }
+
+    @GetMapping("/file/download/{fileName}")
+    ResponseEntity<byte[]> downloadFile(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization,
+            @PathVariable String fileName
+                                       ) {
+        return boardService.downloadFile(authorization, fileName);
+    }
+
+    @GetMapping("/stats/authors")
+    public List<BoardAuthorStatsResponseDto> getAuthorStats(
+            @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorization,
+            @RequestParam(defaultValue = "1") long minCount
+                                                           ) {
+        return boardService.getAuthorStats(authorization, minCount);
     }
 }

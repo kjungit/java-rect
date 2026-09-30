@@ -4,8 +4,11 @@ package org.example.webservice.service;
 import lombok.RequiredArgsConstructor;
 import org.example.webservice.client.BoardClient;
 import org.example.webservice.dto.*;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -52,5 +55,13 @@ public class BoardService {
 
     public void deleteBoard(String authorization, long id, BoardDeleteRequestDto dto ) {
         boardClient.deleteBoard(authorization, id, dto);
+    }
+
+    public ResponseEntity<byte[]> downloadFile( String authorization, String fileName ) {
+        return boardClient.downloadFile(authorization, fileName);
+    }
+
+    public List<BoardAuthorStatsResponseDto> getAuthorStats( String authorization, long minCount ) {
+        return boardClient.getAuthorStats(authorization, minCount);
     }
 }

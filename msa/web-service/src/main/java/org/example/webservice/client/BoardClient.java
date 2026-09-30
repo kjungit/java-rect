@@ -11,8 +11,11 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @FeignClient(value = "board-service", url = "${edge-service.url:http://localhost:8000}")
 public interface BoardClient {
@@ -71,4 +74,17 @@ public interface BoardClient {
             @PathVariable long id,
             @RequestBody BoardDeleteRequestDto dto
                     );
+
+
+    @GetMapping("/api/boards/file/download/{fileName}")
+    ResponseEntity<byte[]> downloadFile(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @PathVariable String fileName
+                                       );
+
+    @GetMapping("/api/boards/stats/authors")
+    List<BoardAuthorStatsResponseDto> getAuthorStats(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @RequestParam long minCount
+                                                    );
 }
