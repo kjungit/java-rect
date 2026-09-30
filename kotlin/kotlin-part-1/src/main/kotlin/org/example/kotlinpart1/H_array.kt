@@ -206,7 +206,11 @@ fun h_exam6() {
     // 0 0 0 9
 
     // 구구단 표 만들기
-    val gugudan = Array(3) { dan -> IntArray(3) { i -> (dan + 2) * (i + 1) } }
+    val gugudan = Array(3) { dan ->
+        IntArray(3) { i ->
+            (dan + 2) * (i + 1)
+        }
+    }
     for (row in gugudan) {
         println(row.joinToString("  "))
     }

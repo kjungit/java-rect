@@ -38,7 +38,7 @@ fun sumTo(n: Int): Int {
 
 // 구구단 한 단을 출력하는 함수
 fun printGugudan(dan: Int) {
-    for (i in 1..9) {
+    for (i in 1..8) {
         println("$dan x $i = ${dan * i}")
     }
 }

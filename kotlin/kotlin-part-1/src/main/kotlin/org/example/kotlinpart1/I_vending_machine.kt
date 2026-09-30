@@ -13,10 +13,16 @@ fun printMenu(totalMoney: Int) {
     println("============================================")
 }
 
+//fun getChoice(): Int {
+//    println("원하는 메뉴를 선택하시오.")
+//
+//    // Scanner.nextInt()
+//    return readln().toInt()
+//}
+
 fun getChoice(): Int {
     println("원하는 메뉴를 선택하시오.")
 
-    // Scanner.nextInt()
     return readln().toInt()
 }
 
